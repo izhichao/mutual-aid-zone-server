@@ -8,6 +8,7 @@ const formidable = require('koa2-formidable');
 const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
+const cors = require('koa2-cors');
 
 // error handler
 onerror(app);
@@ -18,6 +19,18 @@ app.use(bodyparser());
 app.use(json());
 app.use(logger());
 app.use(require('koa-static')(__dirname + '/public'));
+app.use(
+  cors({
+    origin: function (ctx) {
+      return '*';
+    },
+    maxAge: 5,
+    credentials: true,
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposeHeaders: ['WWW-Authenticate', 'Server-Authorization']
+  })
+);
 
 // logger
 app.use(async (ctx, next) => {
