@@ -4,7 +4,7 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
-
+const formidable = require('koa2-formidable');
 const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
@@ -13,11 +13,8 @@ const store = require('./routes/store');
 onerror(app);
 
 // middlewares
-app.use(
-  bodyparser({
-    enableTypes: ['json', 'form', 'text']
-  })
-);
+app.use(formidable());
+app.use(bodyparser());
 app.use(json());
 app.use(logger());
 app.use(require('koa-static')(__dirname + '/public'));
