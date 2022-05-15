@@ -9,6 +9,9 @@ const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
 const cors = require('koa2-cors');
+const koajwt = require('koa-jwt');
+const jwt = require('jsonwebtoken');
+const SECURT_KEY = 'IHS9794Nis';
 
 // error handler
 onerror(app);
@@ -21,7 +24,7 @@ app.use(logger());
 app.use(require('koa-static')(__dirname + '/public'));
 app.use(
   cors({
-    origin: function (ctx) {
+    origin(ctx) {
       return '*';
     },
     maxAge: 5,
@@ -38,6 +41,38 @@ app.use(async (ctx, next) => {
   await next();
   const ms = new Date() - start;
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+});
+
+// 处理无token或token过期
+app.use((ctx, next) => {
+  return next().catch((err) => {
+    if (err.status === 401) {
+      ctx.status = 401;
+      ctx.body = 'Protected resource, use Authorization header to get access\n';
+    } else {
+      throw err;
+    }
+  });
+});
+
+// 使用koajwt进行token验证
+app.use(
+  koajwt({
+    secret: SECURT_KEY,
+    passthrough: true
+  }).unless({
+    path: [/\/api\/task/, /\/api\/user\/register/, /\/api\/user\/login/]
+  })
+);
+
+// 获取_id
+app.use((ctx, next) => {
+  let token = ctx.header.authorization;
+  if (token) {
+    let payload = jwt.decode(token.split(' ')[1], 'IHS9794Nis');
+    ctx.request.body._id = payload._id;
+  }
+  return next();
 });
 
 // routes
