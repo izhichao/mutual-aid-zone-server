@@ -8,7 +8,7 @@ router.post('/login', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await UserController.login(body);
   if (data === '用户名或密码错误') {
-    ctx.body = new ErrorModel('用户名或密码错误');
+    ctx.body = new ErrorModel(data);
   } else {
     ctx.body = new SuccessModel(data);
   }
@@ -24,14 +24,29 @@ router.post('/register', async (ctx, next) => {
   }
 });
 
-router.get('/detail', (ctx, next) => {
-  ctx.body = 'detail';
+router.get('/detail', async (ctx, next) => {
+  const body = ctx.request.body;
+  body.url = ctx.request.header.host;
+  const data = await UserController.getUser(body);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post('/password', (ctx, next) => {
-  ctx.body = 'password';
+router.post('/password', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await UserController.changePassword(body);
+  if (data === '修改成功') {
+    ctx.body = new SuccessModel(data);
+  } else {
+    ctx.body = new ErrorModel(data);
+  }
 });
 
-router.post('/edit', (ctx, next) => {});
+router.post('/edit', async (ctx, next) => {
+  const body = ctx.request.body;
+  // 获取上传图片名称
+  body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
+  const data = await UserController.editUser(body);
+  ctx.body = new SuccessModel(data);
+});
 
 module.exports = router;

@@ -1,9 +1,10 @@
 const User = require('../db/models/User');
 const jwt = require('jsonwebtoken');
-
+const genPassword = require('../utils/cryp');
 class UserController {
   static async login(userData) {
-    const { username, password } = userData;
+    let { username, password } = userData;
+    password = genPassword(password);
     const user = await User.find({ username, password });
     if (user.length === 0) {
       return '用户名或密码错误';
@@ -20,13 +21,52 @@ class UserController {
   }
 
   static async register(userData) {
-    const { username, phone, email, password } = userData;
+    let { username, phone, email, password } = userData;
+    password = genPassword(password);
     const oldUser = await User.find({ username });
     if (oldUser.length) {
       return '用户名已存在';
     }
     User.create({ username, phone, email, password });
     return '注册成功';
+  }
+
+  static async getUser(body) {
+    const { _id, url } = body;
+    const user = await User.findById(_id);
+    if (user.avatar.startsWith('/')) {
+      user.avatar = `http://${url}${user.avatar}`;
+      console.log(user.avatar);
+    }
+    return user;
+  }
+
+  static async changePassword(userData) {
+    let { _id, oldPassword, password } = userData;
+    oldPassword = genPassword(oldPassword);
+    password = genPassword(password);
+    const user = await User.findOneAndUpdate({ _id, password: oldPassword }, { password }, { new: true });
+    if (user) {
+      return '修改成功';
+    } else {
+      return '原密码错误';
+    }
+  }
+
+  static async editUser(userData) {
+    let { _id, username, phone, email, address, avatar } = userData;
+    const newUserData = { username, phone, email };
+    if (address) {
+      newUserData.address = address;
+    }
+
+    if (avatar) {
+      avatar = `/images/${avatar}`;
+      newUserData.avatar = avatar;
+    }
+
+    await User.findOneAndUpdate({ _id }, newUserData, { new: true });
+    return '修改成功';
   }
 }
 

@@ -1,7 +1,7 @@
 class BaseModel {
   constructor(data, msg) {
     if (typeof data === 'string') {
-      this.message = data;
+      this.msg = data;
       data = null;
       msg = null;
     }

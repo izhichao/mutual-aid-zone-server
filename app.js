@@ -1,10 +1,11 @@
+const path = require('path');
 const Koa = require('koa');
 const app = new Koa();
 const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
-const logger = require('koa-logger');
 const formidable = require('koa2-formidable');
+const logger = require('koa-logger');
 const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
@@ -17,7 +18,7 @@ const SECURT_KEY = 'IHS9794Nis';
 onerror(app);
 
 // middlewares
-app.use(formidable());
+app.use(formidable({ multiples: true, uploadDir: path.join(__dirname, 'public', 'images'), keepExtensions: true }));
 app.use(bodyparser());
 app.use(json());
 app.use(logger());
