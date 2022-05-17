@@ -11,7 +11,7 @@ class UserController {
     } else {
       const token = jwt.sign(
         {
-          _id: user[0]._id
+          userId: user[0]._id
         },
         'IHS9794Nis',
         { expiresIn: '12h' }
@@ -32,20 +32,19 @@ class UserController {
   }
 
   static async getUser(body) {
-    const { _id, url } = body;
-    const user = await User.findById(_id);
-    if (user.avatar.startsWith('/')) {
+    const { userId, url } = body;
+    const user = await User.findById(userId);
+    if (user?.avatar.startsWith('/')) {
       user.avatar = `http://${url}${user.avatar}`;
-      console.log(user.avatar);
     }
     return user;
   }
 
   static async changePassword(userData) {
-    let { _id, oldPassword, password } = userData;
+    let { userId, oldPassword, password } = userData;
     oldPassword = genPassword(oldPassword);
     password = genPassword(password);
-    const user = await User.findOneAndUpdate({ _id, password: oldPassword }, { password }, { new: true });
+    const user = await User.findOneAndUpdate({ _id: userId, password: oldPassword }, { password }, { new: true });
     if (user) {
       return '修改成功';
     } else {
@@ -54,7 +53,7 @@ class UserController {
   }
 
   static async editUser(userData) {
-    let { _id, username, phone, email, address, avatar } = userData;
+    let { userId, username, phone, email, address, avatar } = userData;
     const newUserData = { username, phone, email };
     if (address) {
       newUserData.address = address;
@@ -65,7 +64,7 @@ class UserController {
       newUserData.avatar = avatar;
     }
 
-    await User.findOneAndUpdate({ _id }, newUserData, { new: true });
+    await User.findOneAndUpdate({ _id: userId }, newUserData, { new: true });
     return '修改成功';
   }
 }

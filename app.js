@@ -49,7 +49,7 @@ app.use((ctx, next) => {
   return next().catch((err) => {
     if (err.status === 401) {
       ctx.status = 401;
-      ctx.body = 'Protected resource, use Authorization header to get access\n';
+      ctx.body = '请先登录';
     } else {
       throw err;
     }
@@ -59,19 +59,18 @@ app.use((ctx, next) => {
 // 使用koajwt进行token验证
 app.use(
   koajwt({
-    secret: SECURT_KEY,
-    passthrough: true
+    secret: SECURT_KEY
   }).unless({
-    path: [/\/api\/task/, /\/api\/user\/register/, /\/api\/user\/login/]
+    path: [/\/api\/task$/, /\/api\/user\/register/, /\/api\/user\/login/]
   })
 );
 
-// 获取_id
+// 获取userId
 app.use((ctx, next) => {
   let token = ctx.header.authorization;
   if (token) {
     let payload = jwt.decode(token.split(' ')[1], 'IHS9794Nis');
-    ctx.request.body._id = payload._id;
+    ctx.request.body.userId = payload.userId;
   }
   return next();
 });
