@@ -11,7 +11,7 @@ const TaskSchema = mongoose.Schema(
       required: true
     },
     content: {
-      type: Number,
+      type: String,
       required: true
     },
     imgs: Array,
