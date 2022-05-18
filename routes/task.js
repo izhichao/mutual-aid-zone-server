@@ -20,8 +20,12 @@ router.get('/accept', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
-router.get('/detail', (ctx, next) => {
-  ctx.body = 'detail';
+router.get('/detail', async (ctx, next) => {
+  const body = ctx.request.body;
+  const query = ctx.query;
+  body.url = ctx.request.header.host;
+  const data = await TaskController.getTaskDetail(body, query);
+  ctx.body = new SuccessModel(data);
 });
 
 router.post('/create', async (ctx, next) => {
