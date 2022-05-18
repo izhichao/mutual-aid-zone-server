@@ -22,7 +22,13 @@ class TaskController {
     const { _id } = query;
     const { url } = body;
     const task = await Task.findById(_id).lean();
-    const { username } = await User.findById(task.setter);
+    // 将用户ID转换为用户名
+    const { username: setter } = await User.findById(task.setter);
+    task.setterName = setter;
+    if (task.getter) {
+      const { username: getter } = await User.findById(task.getter);
+      task.getterName = getter;
+    }
     // 将图片路径替换为绝对路径
     task.imgs = task.imgs.map((item) => {
       if (item.startsWith('/')) {
@@ -30,8 +36,6 @@ class TaskController {
       }
       return item;
     });
-    // 将用户ID转换为用户名
-    task.setter = username;
     return task;
   }
 
@@ -46,6 +50,30 @@ class TaskController {
       imgs
     });
     return '发布成功';
+  }
+
+  static async deleteTask(taskData) {
+    const { _id } = taskData;
+    await Task.findByIdAndDelete(_id);
+    return '删除成功';
+  }
+
+  static async acceptTask(taskData) {
+    const { userId, _id } = taskData;
+    await Task.findByIdAndUpdate(_id, { getter: userId, status: 1 });
+    return '接受成功';
+  }
+
+  static async giveupTask(taskData) {
+    const { _id } = taskData;
+    await Task.findByIdAndUpdate(_id, { getter: null, status: 0 });
+    return '放弃成功';
+  }
+
+  static async finishTask(taskData) {
+    const { _id } = taskData;
+    await Task.findByIdAndUpdate(_id, { status: 2 });
+    return '任务完成';
   }
 }
 

@@ -40,24 +40,32 @@ router.post('/create', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
-router.post('/delete', (ctx, next) => {
-  ctx.body = 'delete';
+router.post('/delete', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await TaskController.deleteTask(body);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post('/edit', (ctx, next) => {
+router.post('/edit', async (ctx, next) => {
   ctx.body = 'edit';
 });
 
-router.post('/accept', (ctx, next) => {
-  ctx.body = 'accept';
+router.post('/accept', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await TaskController.acceptTask(body);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post('/giveup', (ctx, next) => {
-  ctx.body = 'giveup';
+router.post('/giveup', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await TaskController.giveupTask(body);
+  ctx.body = new SuccessModel(data);
 });
 
-router.post('/finish', (ctx, next) => {
-  ctx.body = 'finish';
+router.post('/finish', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await TaskController.finishTask(body);
+  ctx.body = new SuccessModel(data);
 });
 
 module.exports = router;
