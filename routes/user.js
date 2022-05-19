@@ -26,7 +26,6 @@ router.post('/register', async (ctx, next) => {
 
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
-  body.url = ctx.request.header.host;
   const data = await UserController.getUser(body);
   ctx.body = new SuccessModel(data);
 });

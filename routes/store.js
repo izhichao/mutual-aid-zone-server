@@ -6,7 +6,6 @@ router.prefix('/api/store');
 
 router.get('/', async (ctx, next) => {
   const body = ctx.request.body;
-  body.url = ctx.request.header.host;
   const data = await StoreController.getGoods(body);
   ctx.body = new SuccessModel(data);
 });
@@ -15,6 +14,12 @@ router.post('/create', async (ctx, next) => {
   const body = ctx.request.body;
   body.img = ctx.request.files.img?.path.split('\\').pop();
   const data = await StoreController.createGood(body);
+  ctx.body = new SuccessModel(data);
+});
+
+router.post('/exchange', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await StoreController.exchangeGood(body);
   ctx.body = new SuccessModel(data);
 });
 

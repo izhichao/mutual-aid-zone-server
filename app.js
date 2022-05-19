@@ -65,13 +65,14 @@ app.use(
   })
 );
 
-// 获取userId
+// 获取userId,url
 app.use((ctx, next) => {
   let token = ctx.header.authorization;
   if (token) {
     let payload = jwt.decode(token.split(' ')[1], 'IHS9794Nis');
     ctx.request.body.userId = payload.userId;
   }
+  ctx.request.body.url = ctx.request.header.host;
   return next();
 });
 

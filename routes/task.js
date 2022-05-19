@@ -23,7 +23,6 @@ router.get('/accept', async (ctx, next) => {
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
   const query = ctx.query;
-  body.url = ctx.request.header.host;
   const data = await TaskController.getTaskDetail(body, query);
   ctx.body = new SuccessModel(data);
 });
