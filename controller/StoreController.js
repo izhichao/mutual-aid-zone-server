@@ -2,6 +2,22 @@ const Store = require('../db/models/Store');
 const User = require('../db/models/User');
 
 class StoreController {
+  static getGoods = async (body) => {
+    const { url } = body;
+    const goods = await Store.find();
+    goods.forEach((item) => {
+      item.img = `http://${url}${item.img}`;
+    });
+    return goods;
+  };
+
+  static createGood = async (goodData) => {
+    let { name, price, stock, img } = goodData;
+    img = `/images/${img}`;
+    Store.create({ name, price, stock, img });
+    return '添加成功';
+  };
+
   static getBalance = async (body) => {
     const { userId } = body;
     const user = await User.findById(userId);
@@ -12,8 +28,8 @@ class StoreController {
     const { userId, amount } = body;
     const { balance: oldBalance } = await this.getBalance(body);
     const balance = oldBalance + amount;
-    await User.findOneAndUpdate({ _id: userId }, { balance });
-    return '充值成功';
+    const user = await User.findOneAndUpdate({ _id: userId }, { balance }, { new: true });
+    return { balance: user.balance };
   };
 }
 
