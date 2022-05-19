@@ -29,12 +29,18 @@ router.get('/detail', async (ctx, next) => {
 
 router.post('/create', async (ctx, next) => {
   const body = ctx.request.body;
-  body.imgs = [];
   // 获取上传到图片url
-  ctx.request.files.imgFiles &&
-    ctx.request.files.imgFiles.forEach((item) => {
+  body.imgs = [];
+  let imgFiles = ctx.request.files.imgFiles;
+  // 多张图片
+  if (imgFiles instanceof Array) {
+    imgFiles.forEach((item) => {
       body.imgs.push(item.path.split('\\').pop());
     });
+  } else if (imgFiles instanceof Object) {
+    // 单张图片
+    body.imgs.push(imgFiles.path.split('\\').pop());
+  }
   const data = await TaskController.createTask(body);
   ctx.body = new SuccessModel(data);
 });
@@ -46,7 +52,23 @@ router.post('/delete', async (ctx, next) => {
 });
 
 router.post('/edit', async (ctx, next) => {
-  ctx.body = 'edit';
+  const body = ctx.request.body;
+  // 获取上传到图片url
+  body.imgs = [];
+  let imgFiles = ctx.request.files.imgFiles;
+  if (imgFiles instanceof Array) {
+    imgFiles.forEach((item) => {
+      body.imgs.push(item.path.split('\\').pop());
+    });
+  } else if (imgFiles instanceof Object) {
+    body.imgs.push(imgFiles.path.split('\\').pop());
+  }
+  const data = await TaskController.editTask(body);
+  if (data === '图片数量最大为6张') {
+    ctx.body = new ErrorModel(data);
+  } else {
+    ctx.body = new SuccessModel(data);
+  }
 });
 
 router.post('/accept', async (ctx, next) => {

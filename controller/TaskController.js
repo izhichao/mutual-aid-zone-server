@@ -2,19 +2,19 @@ const Task = require('../db/models/Task');
 const User = require('../db/models/User');
 class TaskController {
   static async getTasks() {
-    const tasks = await Task.find();
+    const tasks = await Task.find().sort({ createdAt: -1 });
     return tasks;
   }
 
   static async getPublishTasks(body) {
     const { userId } = body;
-    const tasks = await Task.find({ setter: userId });
+    const tasks = await Task.find({ setter: userId }).sort({ createdAt: -1 });
     return tasks;
   }
 
   static async getAcceptTasks(body) {
     const { userId } = body;
-    const tasks = await Task.find({ getter: userId });
+    const tasks = await Task.find({ getter: userId }).sort({ createdAt: -1 });
     return tasks;
   }
 
@@ -56,6 +56,23 @@ class TaskController {
     const { _id } = taskData;
     await Task.findByIdAndDelete(_id);
     return '删除成功';
+  }
+
+  static async editTask(taskData) {
+    let { _id, title, price, content, imgs } = taskData;
+    imgs = imgs.map((item) => `/images/${item}`);
+    const oldTask = await Task.findById(_id);
+    if (oldTask.imgs.length >= 6) {
+      return '图片数量最大为6张';
+    }
+    const newImgs = [...oldTask.imgs, ...imgs];
+    await Task.findByIdAndUpdate(_id, {
+      title,
+      price,
+      content,
+      imgs: newImgs
+    });
+    return '编辑成功';
   }
 
   static async acceptTask(taskData) {
