@@ -42,14 +42,14 @@ class TaskController {
   static async createTask(taskData) {
     let { title, price, content, userId, imgs } = taskData;
     imgs = imgs.map((item) => `/images/${item}`);
-    Task.create({
+    const task = await Task.create({
       title,
       price,
       content,
       setter: userId,
       imgs
     });
-    return '发布成功';
+    return task;
   }
 
   static async deleteTask(taskData) {
@@ -62,17 +62,21 @@ class TaskController {
     let { _id, title, price, content, imgs } = taskData;
     imgs = imgs.map((item) => `/images/${item}`);
     const oldTask = await Task.findById(_id);
-    if (oldTask.imgs.length >= 6) {
+    if (oldTask.imgs.length >= 6 && imgs.length > 0) {
       return '图片数量最大为6张';
     }
     const newImgs = [...oldTask.imgs, ...imgs];
-    await Task.findByIdAndUpdate(_id, {
-      title,
-      price,
-      content,
-      imgs: newImgs
-    });
-    return '编辑成功';
+    const task = await Task.findByIdAndUpdate(
+      _id,
+      {
+        title,
+        price,
+        content,
+        imgs: newImgs
+      },
+      { new: true }
+    );
+    return task;
   }
 
   static async acceptTask(taskData) {
