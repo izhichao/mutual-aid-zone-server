@@ -42,6 +42,16 @@ class TaskController {
   static async createTask(taskData) {
     let { title, price, content, userId, imgs } = taskData;
     imgs = imgs.map((item) => `/images/${item}`);
+
+    // 获取用户的余额，判断是否足够
+    const user = await User.findById(userId);
+    if (user.balance < parseInt(price)) {
+      return '余额不足';
+    } else {
+      await User.findByIdAndUpdate(userId, {
+        balance: user.balance - parseInt(price)
+      });
+    }
     const task = await Task.create({
       title,
       price,
