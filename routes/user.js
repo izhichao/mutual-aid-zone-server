@@ -24,6 +24,11 @@ router.post('/register', async (ctx, next) => {
   }
 });
 
+router.get('/list', async (ctx, next) => {
+  const data = await UserController.getUsers();
+  ctx.body = new SuccessModel(data);
+});
+
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await UserController.getUser(body);

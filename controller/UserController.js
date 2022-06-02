@@ -31,6 +31,11 @@ class UserController {
     return '注册成功';
   }
 
+  static async getUsers() {
+    const users = await User.find({});
+    return users;
+  }
+
   static async getUser(body) {
     const { userId, url } = body;
     const user = await User.findById(userId);
