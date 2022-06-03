@@ -31,7 +31,8 @@ router.get('/list', async (ctx, next) => {
 
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
-  const data = await UserController.getUser(body);
+  const query = ctx.query;
+  const data = await UserController.getUser(body, query);
   ctx.body = new SuccessModel(data);
 });
 
@@ -50,6 +51,12 @@ router.post('/edit', async (ctx, next) => {
   // 获取上传图片名称
   body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
   const data = await UserController.editUser(body);
+  ctx.body = new SuccessModel(data);
+});
+
+router.post('/delete', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await UserController.deleteUser(body);
   ctx.body = new SuccessModel(data);
 });
 

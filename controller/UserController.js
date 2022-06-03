@@ -36,9 +36,16 @@ class UserController {
     return users;
   }
 
-  static async getUser(body) {
+  static async getUser(body, query) {
     const { userId, url } = body;
-    const user = await User.findById(userId);
+    const { _id } = query;
+    let user = {};
+    // 传入_id时，查询该用户的信息；不传入时，查询当前登录用户的信息
+    if (_id) {
+      user = await User.findById(_id);
+    } else {
+      user = await User.findById(userId);
+    }
     if (user?.avatar.startsWith('/')) {
       user.avatar = `http://${url}${user.avatar}`;
     }
@@ -58,19 +65,37 @@ class UserController {
   }
 
   static async editUser(userData) {
-    let { userId, username, phone, email, address, avatar } = userData;
+    let { _id, userId, username, phone, email, address, avatar, balance, role, password } = userData;
+    if (_id) {
+      userId = _id;
+    }
     const newUserData = { username, phone, email };
     if (address) {
       newUserData.address = address;
     }
-
     if (avatar) {
       avatar = `/images/${avatar}`;
       newUserData.avatar = avatar;
     }
+    if (balance) {
+      newUserData.balance = balance;
+    }
+    if (role) {
+      newUserData.role = role;
+    }
+    if (password) {
+      password = genPassword(password);
+      newUserData.password = password;
+    }
 
     await User.findOneAndUpdate({ _id: userId }, newUserData, { new: true });
     return '修改成功';
+  }
+
+  static async deleteUser(userData) {
+    let { _id } = userData;
+    await User.findOneAndDelete({ _id });
+    return '删除成功';
   }
 }
 
