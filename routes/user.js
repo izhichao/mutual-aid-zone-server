@@ -51,7 +51,11 @@ router.post('/edit', async (ctx, next) => {
   // 获取上传图片名称
   body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
   const data = await UserController.editUser(body);
-  ctx.body = new SuccessModel(data);
+  if (data === '修改成功') {
+    ctx.body = new SuccessModel(data);
+  } else {
+    ctx.body = new ErrorModel(data);
+  }
 });
 
 router.post('/delete', async (ctx, next) => {

@@ -66,6 +66,10 @@ class UserController {
 
   static async editUser(userData) {
     let { _id, userId, username, phone, email, address, avatar, balance, role, password } = userData;
+    const oldUser = await User.find({ username });
+    if (oldUser.length) {
+      return '用户名已存在';
+    }
     if (_id) {
       userId = _id;
     }
