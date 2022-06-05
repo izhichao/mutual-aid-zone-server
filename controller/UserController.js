@@ -86,7 +86,7 @@ class UserController {
     if (balance) {
       newUserData.balance = balance;
     }
-    if (role) {
+    if (role === 0 || role === 1) {
       newUserData.role = role;
     }
     if (password) {

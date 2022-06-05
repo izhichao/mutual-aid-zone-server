@@ -10,10 +10,30 @@ router.get('/', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
+router.get('/detail', async (ctx, next) => {
+  const body = ctx.request.body;
+  const query = ctx.query;
+  const data = await StoreController.getGood(body, query);
+  ctx.body = new SuccessModel(data);
+});
+
 router.post('/create', async (ctx, next) => {
   const body = ctx.request.body;
   body.img = ctx.request.files.img?.path.split('\\').pop();
   const data = await StoreController.createGood(body);
+  ctx.body = new SuccessModel(data);
+});
+
+router.post('/edit', async (ctx, next) => {
+  const body = ctx.request.body;
+  body.img = ctx.request.files.img?.path.split('\\').pop();
+  const data = await StoreController.editGood(body);
+  ctx.body = new SuccessModel(data);
+});
+
+router.post('/delete', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await StoreController.deleteGood(body);
   ctx.body = new SuccessModel(data);
 });
 

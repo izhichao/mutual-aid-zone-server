@@ -4,6 +4,11 @@ const UserController = require('../controller/UserController');
 
 router.prefix('/api/user');
 
+router.get('/', async (ctx, next) => {
+  const data = await UserController.getUsers();
+  ctx.body = new SuccessModel(data);
+});
+
 router.post('/login', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await UserController.login(body);
@@ -22,11 +27,6 @@ router.post('/register', async (ctx, next) => {
   } else {
     ctx.body = new SuccessModel(data);
   }
-});
-
-router.get('/list', async (ctx, next) => {
-  const data = await UserController.getUsers();
-  ctx.body = new SuccessModel(data);
 });
 
 router.get('/detail', async (ctx, next) => {

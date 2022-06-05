@@ -18,6 +18,30 @@ class StoreController {
     return '添加成功';
   }
 
+  static async editGood(goodData) {
+    let { _id, name, price, stock, img } = goodData;
+    const newGoodData = { name, price, stock };
+    if (img) {
+      newGoodData.img = `/images/${img}`;
+    }
+    await Store.findByIdAndUpdate(_id, newGoodData);
+    return '修改成功';
+  }
+
+  static async deleteGood(body) {
+    const { _id } = body;
+    await Store.findByIdAndDelete(_id);
+    return '删除成功';
+  }
+
+  static async getGood(body, query) {
+    const { url } = body;
+    const { _id } = query;
+    const good = await Store.findById(_id).lean();
+    good.img = `http://${url}${good.img}`;
+    return good;
+  }
+
   static async exchangeGood(body) {
     const { userId, _id } = body;
     const { balance } = await this.getBalance(body);

@@ -61,7 +61,7 @@ app.use(
   koajwt({
     secret: SECURT_KEY
   }).unless({
-    path: [/\/api\/task$/, /\/api\/user\/register/, /\/api\/user\/login/,/\/api\/user/]
+    path: [/\/api\/task$/, /\/api\/user\/register/, /\/api\/user\/login/,/\/api\/user/,/\/api\/store/]
   })
 );
 
