@@ -24,7 +24,11 @@ router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
   const query = ctx.query;
   const data = await TaskController.getTaskDetail(body, query);
-  ctx.body = new SuccessModel(data);
+  if (typeof data === 'string') {
+    ctx.body = new ErrorModel(data);
+  } else {
+    ctx.body = new SuccessModel(data);
+  }
 });
 
 router.post('/create', async (ctx, next) => {
@@ -42,7 +46,11 @@ router.post('/create', async (ctx, next) => {
     body.imgs.push(imgFiles.path.split('\\').pop());
   }
   const data = await TaskController.createTask(body);
-  ctx.body = new SuccessModel(data);
+  if (typeof data === 'string') {
+    ctx.body = new ErrorModel(data);
+  } else {
+    ctx.body = new SuccessModel(data);
+  }
 });
 
 router.post('/delete', async (ctx, next) => {
@@ -64,7 +72,7 @@ router.post('/edit', async (ctx, next) => {
     body.imgs.push(imgFiles.path.split('\\').pop());
   }
   const data = await TaskController.editTask(body);
-  if (data === '图片数量最大为6张') {
+  if (typeof data === 'string') {
     ctx.body = new ErrorModel(data);
   } else {
     ctx.body = new SuccessModel(data);
