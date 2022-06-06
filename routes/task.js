@@ -20,6 +20,12 @@ router.get('/accept', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
+router.get('/search', async (ctx, next) => {
+  const query = ctx.query;
+  const data = await TaskController.getSearchTasks(query);
+  ctx.body = new SuccessModel(data);
+});
+
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
   const query = ctx.query;

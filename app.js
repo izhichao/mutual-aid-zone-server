@@ -61,7 +61,7 @@ app.use(
   koajwt({
     secret: SECURT_KEY
   }).unless({
-    path: [/\/api\/task/, /\/api\/user\/register/, /\/api\/user\/login/,/\/api\/user/,/\/api\/store/]
+    path: [/\/api\/task$/,/\/api\/task\/search/, /\/api\/user\/register/, /\/api\/user\/login/]
   })
 );
 
@@ -70,7 +70,9 @@ app.use((ctx, next) => {
   let token = ctx.header.authorization;
   if (token) {
     let payload = jwt.decode(token.split(' ')[1], 'IHS9794Nis');
-    ctx.request.body.userId = payload.userId;
+    if (payload) {
+      ctx.request.body.userId = payload.userId;
+    }
   }
   ctx.request.body.url = ctx.request.header.host;
   return next();

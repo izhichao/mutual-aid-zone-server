@@ -28,6 +28,12 @@ class TaskController {
     return tasks;
   }
 
+  static async getSearchTasks(query) {
+    const { keyword } = query;
+    const tasks = await Task.find({ title: { $regex: keyword } }).sort({ createdAt: -1 });
+    return tasks;
+  }
+
   static async getTaskDetail(body, query) {
     const { _id } = query;
     const { url } = body;
