@@ -5,7 +5,7 @@ class UserController {
   static async login(userData) {
     let { username, password } = userData;
     password = genPassword(password);
-    const user = await User.find({ username, password });
+    const user = await User.find({ username, password }).lean();
     if (user.length === 0) {
       return '用户名或密码错误';
     } else {
@@ -16,18 +16,23 @@ class UserController {
         'IHS9794Nis',
         { expiresIn: '12h' }
       );
-      return { token };
+      user[0].token = token;
+      return user[0];
     }
   }
 
   static async register(userData) {
     let { username, phone, email, password } = userData;
+    let role = 0;
     password = genPassword(password);
     const oldUser = await User.find({ username });
     if (oldUser.length) {
       return '用户名已存在';
     }
-    User.create({ username, phone, email, password });
+    if (username === 'admin') {
+      role = 1;
+    }
+    User.create({ username, phone, email, password, role });
     return '注册成功';
   }
 
