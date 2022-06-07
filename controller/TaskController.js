@@ -108,30 +108,49 @@ class TaskController {
       imgs: newImgs
     };
 
+    // 修改价格
+    if (price !== oldTask.price) {
+      if (status !== oldTask.status) {
+        return '价格与状态不可同时修改';
+      }
+      if (oldTask.status === 2) {
+        return '任务已完成，无法修改价格';
+      }
+      const setter = await User.findById(oldTask.setter);
+      const gap = price - oldTask.price;
+      if (setter.balance < gap) {
+        return '余额不足';
+      }
+      await User.findByIdAndUpdate(oldTask.setter, { balance: setter.balance - gap });
+    }
+
+    // 修改状态
     if (status !== oldTask.status) {
-      if (oldTask.getter) {
-        // 任务有接收者时
+      if (oldTask.status === 0) {
+        // 未接受 -> 已接受/已完成
+        return '任务暂无接收者，无法修改状态！';
+      } else if (oldTask.status === 1) {
         if (status === 0) {
-          // 移除接收者
+          // 已接受 -> 未接受
           newTask.getter = null;
           newTask.status = status;
-        } else if (status === 1) {
-          newTask.status = status;
-          const getter = await User.findById(oldTask.getter);
-          if (getter.balance < parseInt(price)) {
-            return `接收者余额不足${oldTask.price}元，无法修改任务状态`;
-          }
-          await User.findByIdAndUpdate(oldTask.getter, { balance: getter.balance - oldTask.price });
-        } else {
+        } else if (status === 2) {
+          // 已接受 -> 已完成
           newTask.status = status;
           const getter = await User.findById(oldTask.getter);
           await User.findByIdAndUpdate(oldTask.getter, { balance: getter.balance + oldTask.price });
         }
       } else {
-        // 任务无接收者时
-        if (status === 1 || status === 2) {
-          return '任务暂无接收者，无法修改状态！';
+        // 已完成 -> 未接受/已接受
+        if (status === 0) {
+          newTask.getter = null;
         }
+        newTask.status = status;
+        const getter = await User.findById(oldTask.getter);
+        if (getter.balance < parseInt(oldTask.price)) {
+          return `接收者余额不足${oldTask.price}元，无法修改任务状态`;
+        }
+        await User.findByIdAndUpdate(oldTask.getter, { balance: getter.balance - oldTask.price });
       }
     }
 
