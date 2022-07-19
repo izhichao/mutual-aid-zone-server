@@ -110,7 +110,9 @@ class TaskController {
 
     // 修改价格
     if (price !== oldTask.price) {
-      if (status !== oldTask.status) {
+      if (status && status !== oldTask.status) {
+        console.log(status);
+        console.log(oldTask.status);
         return '价格与状态不可同时修改';
       }
       if (oldTask.status === 2) {
@@ -125,7 +127,7 @@ class TaskController {
     }
 
     // 修改状态
-    if (status !== oldTask.status) {
+    if (status && status !== oldTask.status) {
       if (oldTask.status === 0) {
         // 未接受 -> 已接受/已完成
         return '任务暂无接收者，无法修改状态！';
