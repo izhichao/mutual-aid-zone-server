@@ -12,6 +12,7 @@ const store = require('./routes/store');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
+const config = require('config');
 const SECURT_KEY = 'IHS9794Nis';
 
 // error handler
@@ -74,7 +75,11 @@ app.use((ctx, next) => {
       ctx.request.body.userId = payload.userId;
     }
   }
-  ctx.request.body.url = ctx.request.header.host;
+  if (process.env.NODE_ENV === 'production') {
+    ctx.request.body.url = `${config.get('server.ip')}:${config.get('server.port')}`;
+  } else {
+    ctx.request.body.url = ctx.request.header.host;
+  }
   return next();
 });
 

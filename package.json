@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "start": "node bin/www",
-    "dev": "cross-env NODE_ENV=dev ./node_modules/.bin/nodemon bin/www",
-    "prd": "pm2 start bin/www --name zone",
+    "dev": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon bin/www",
+    "prd": "cross-env NODE_ENV=production pm2 start bin/www --name zone",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "config": "^3.3.8",
     "debug": "^4.1.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
