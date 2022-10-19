@@ -49,7 +49,12 @@ router.post('/password', async (ctx, next) => {
 router.post('/edit', async (ctx, next) => {
   const body = ctx.request.body;
   // 获取上传图片名称
-  body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
+  console.log(ctx.request.files.avatar.path);
+  if (ctx.request.files.avatar?.path.includes('\\')) {
+    body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
+  } else {
+    body.avatar = ctx.request.files.avatar?.path.split('/').pop();
+  }
   const data = await UserController.editUser(body);
   if (data === '修改成功') {
     ctx.body = new SuccessModel(data);

@@ -19,14 +19,22 @@ router.get('/detail', async (ctx, next) => {
 
 router.post('/create', async (ctx, next) => {
   const body = ctx.request.body;
-  body.img = ctx.request.files.img?.path.split('\\').pop();
+  if (ctx.request.files.img?.path.includes('\\')) {
+    body.img = ctx.request.files.img?.path.split('\\').pop();
+  } else {
+    body.img = ctx.request.files.img?.path.split('/').pop();
+  }
   const data = await StoreController.createGood(body);
   ctx.body = new SuccessModel(data);
 });
 
 router.post('/edit', async (ctx, next) => {
   const body = ctx.request.body;
-  body.img = ctx.request.files.img?.path.split('\\').pop();
+  if (ctx.request.files.img?.path.includes('\\')) {
+    body.img = ctx.request.files.img?.path.split('\\').pop();
+  } else {
+    body.img = ctx.request.files.img?.path.split('/').pop();
+  }
   const data = await StoreController.editGood(body);
   ctx.body = new SuccessModel(data);
 });

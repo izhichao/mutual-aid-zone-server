@@ -45,11 +45,19 @@ router.post('/create', async (ctx, next) => {
   // 多张图片
   if (imgFiles instanceof Array) {
     imgFiles.forEach((item) => {
-      body.imgs.push(item.path.split('\\').pop());
+      if (item.path.includes('\\')) {
+        body.imgs.push(item.path.split('\\').pop());
+      } else {
+        body.imgs.push(item.path.split('/').pop());
+      }
     });
   } else if (imgFiles instanceof Object) {
     // 单张图片
-    body.imgs.push(imgFiles.path.split('\\').pop());
+    if (imgFiles.path.includes('\\')) {
+      body.imgs.push(imgFiles.path.split('\\').pop());
+    } else {
+      body.imgs.push(imgFiles.path.split('/').pop());
+    }
   }
   const data = await TaskController.createTask(body);
   if (typeof data === 'string') {
@@ -72,10 +80,18 @@ router.post('/edit', async (ctx, next) => {
   let imgFiles = ctx.request.files.imgFiles;
   if (imgFiles instanceof Array) {
     imgFiles.forEach((item) => {
-      body.imgs.push(item.path.split('\\').pop());
+      if (item.path.includes('\\')) {
+        body.imgs.push(item.path.split('\\').pop());
+      } else {
+        body.imgs.push(item.path.split('/').pop());
+      }
     });
   } else if (imgFiles instanceof Object) {
-    body.imgs.push(imgFiles.path.split('\\').pop());
+    if (imgFiles.path.includes('\\')) {
+      body.imgs.push(imgFiles.path.split('\\').pop());
+    } else {
+      body.imgs.push(imgFiles.path.split('/').pop());
+    }
   }
   const data = await TaskController.editTask(body);
   if (typeof data === 'string') {
