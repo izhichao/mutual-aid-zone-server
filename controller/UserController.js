@@ -42,7 +42,7 @@ class UserController {
   }
 
   static async getUser(body, query) {
-    const { userId, url } = body;
+    const { userId, url,protocol } = body;
     const { _id } = query;
     let user = {};
     // 传入_id时，查询该用户的信息；不传入时，查询当前登录用户的信息
@@ -52,7 +52,7 @@ class UserController {
       user = await User.findById(userId);
     }
     if (user?.avatar.startsWith('/')) {
-      user.avatar = `http://${url}${user.avatar}`;
+      user.avatar = `${protocol}://${url}${user.avatar}`;
     }
     return user;
   }

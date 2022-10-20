@@ -12,8 +12,6 @@ const store = require('./routes/store');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
-const config = require('config');
-const { log } = require('console');
 const SECURT_KEY = 'IHS9794Nis';
 
 // error handler
@@ -78,8 +76,10 @@ app.use((ctx, next) => {
   }
   if (process.env.NODE_ENV === 'production') {
     ctx.request.body.url = `${ctx.request.header.host}/zone`;
+    ctx.request.body.protocol = `https`;
   } else {
     ctx.request.body.url = ctx.request.header.host;
+    ctx.request.body.protocol = `http`;
   }
   return next();
 });

@@ -3,10 +3,10 @@ const User = require('../db/models/User');
 
 class StoreController {
   static async getGoods(body) {
-    const { url } = body;
+    const { url,protocol } = body;
     const goods = await Store.find();
     goods.forEach((item) => {
-      item.img = `http://${url}${item.img}`;
+      item.img = `${protocol}://${url}${item.img}`;
     });
     return goods;
   }
@@ -35,10 +35,10 @@ class StoreController {
   }
 
   static async getGood(body, query) {
-    const { url } = body;
+    const { url,protocol } = body;
     const { _id } = query;
     const good = await Store.findById(_id).lean();
-    good.img = `http://${url}${good.img}`;
+    good.img = `${protocol}://${url}${good.img}`;
     return good;
   }
 

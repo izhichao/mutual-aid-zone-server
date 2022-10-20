@@ -36,7 +36,7 @@ class TaskController {
 
   static async getTaskDetail(body, query) {
     const { _id } = query;
-    const { url } = body;
+    const { url, protocol } = body;
     try {
       const task = await Task.findById(_id).lean();
       // 将用户ID转换为用户名
@@ -51,7 +51,7 @@ class TaskController {
       // 将图片路径替换为绝对路径
       task.imgs = task.imgs.map((item) => {
         if (item.startsWith('/')) {
-          item = `http://${url}${item}`;
+          item = `${protocol}://${url}${item}`;
         }
         return item;
       });
