@@ -13,6 +13,7 @@ const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const { log } = require('console');
 const SECURT_KEY = 'IHS9794Nis';
 
 // error handler
@@ -76,7 +77,7 @@ app.use((ctx, next) => {
     }
   }
   if (process.env.NODE_ENV === 'production') {
-    ctx.request.body.url = `${config.get('server.ip')}:${config.get('server.port')}`;
+    ctx.request.body.url = `${ctx.request.header.host}/zone`;
   } else {
     ctx.request.body.url = ctx.request.header.host;
   }
