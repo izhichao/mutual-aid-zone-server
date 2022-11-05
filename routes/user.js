@@ -49,7 +49,6 @@ router.post('/password', async (ctx, next) => {
 router.post('/edit', async (ctx, next) => {
   const body = ctx.request.body;
   // 获取上传图片名称
-  console.log(ctx.request.files.avatar.path);
   if (ctx.request.files.avatar?.path.includes('\\')) {
     body.avatar = ctx.request.files.avatar?.path.split('\\').pop();
   } else {

@@ -3,6 +3,7 @@ const User = require('../db/models/User');
 class TaskController {
   static async getTasks(query) {
     const { page, pageSize } = query;
+    const total = (await Task.find().sort({ createdAt: -1 })).length;
     const tasks = await Task.find()
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
@@ -19,27 +20,30 @@ class TaskController {
         tasks[i].getterName = '无';
       }
     }
-    return tasks;
+
+    return { total, list: tasks };
   }
 
   static async getPublishTasks(body, query) {
     const { page, pageSize } = query;
     const { userId } = body;
+    const total = (await Task.find({ setter: userId }).sort({ createdAt: -1 })).length;
     const tasks = await Task.find({ setter: userId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-    return tasks;
+    return { total, list: tasks };
   }
 
   static async getAcceptTasks(body, query) {
     const { page, pageSize } = query;
     const { userId } = body;
+    const total = (await Task.find({ getter: userId }).sort({ createdAt: -1 })).length;
     const tasks = await Task.find({ getter: userId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
-    return tasks;
+    return { total, list: tasks };
   }
 
   static async getSearchTasks(query) {
