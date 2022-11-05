@@ -1,8 +1,14 @@
 const Task = require('../db/models/Task');
 const User = require('../db/models/User');
 class TaskController {
-  static async getTasks() {
-    const tasks = await Task.find().sort({ createdAt: -1 }).lean();
+  static async getTasks(query) {
+    const { page, pageSize } = query;
+    const tasks = await Task.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
+
     for (let i = 0; i < tasks.length; i++) {
       const { username: setter } = await User.findById(tasks[i].setter);
       tasks[i].setterName = setter;
@@ -16,15 +22,23 @@ class TaskController {
     return tasks;
   }
 
-  static async getPublishTasks(body) {
+  static async getPublishTasks(body, query) {
+    const { page, pageSize } = query;
     const { userId } = body;
-    const tasks = await Task.find({ setter: userId }).sort({ createdAt: -1 });
+    const tasks = await Task.find({ setter: userId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
     return tasks;
   }
 
-  static async getAcceptTasks(body) {
+  static async getAcceptTasks(body, query) {
+    const { page, pageSize } = query;
     const { userId } = body;
-    const tasks = await Task.find({ getter: userId }).sort({ createdAt: -1 });
+    const tasks = await Task.find({ getter: userId })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
     return tasks;
   }
 
@@ -111,8 +125,6 @@ class TaskController {
     // 修改价格
     if (price !== oldTask.price) {
       if (status && status !== oldTask.status) {
-        console.log(status);
-        console.log(oldTask.status);
         return '价格与状态不可同时修改';
       }
       if (oldTask.status === 2) {

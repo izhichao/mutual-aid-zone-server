@@ -4,19 +4,22 @@ const { SuccessModel, ErrorModel } = require('../model/resModel');
 router.prefix('/api/task');
 
 router.get('/', async (ctx, next) => {
-  const data = await TaskController.getTasks();
+  const query = ctx.query;
+  const data = await TaskController.getTasks(query);
   ctx.body = new SuccessModel(data);
 });
 
 router.get('/publish', async (ctx, next) => {
   const body = ctx.request.body;
-  const data = await TaskController.getPublishTasks(body);
+  const query = ctx.query;
+  const data = await TaskController.getPublishTasks(body, query);
   ctx.body = new SuccessModel(data);
 });
 
 router.get('/accept', async (ctx, next) => {
   const body = ctx.request.body;
-  const data = await TaskController.getAcceptTasks(body);
+  const query = ctx.query;
+  const data = await TaskController.getAcceptTasks(body, query);
   ctx.body = new SuccessModel(data);
 });
 
