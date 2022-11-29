@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
-const config = require('config');
+require('dotenv').config();
 let url = 'mongodb://localhost:27017';
-const dnName = 'zone';
+const dbName = 'zone';
+
 if (process.env.NODE_ENV === 'production') {
-  url = `mongodb://${config.get('db.username')}:${config.get('db.password')}@localhost:27017`;
+  const dbUsername = process.env.DB_USERNAME;
+  const dbPassword = process.env.DB_PASSWORD;
+  url = `mongodb://${dbUsername}:${dbPassword}@localhost:27017`;
 }
-mongoose.connect(`${url}/${dnName}`);
+console.log(url);
+mongoose.connect(`${url}/${dbName}`);
 
 const db = mongoose.connection;
 

@@ -4,4 +4,4 @@ dist
 dist-ssr
 *.local
 public/images
-config
+.env
