@@ -8,7 +8,6 @@ if (process.env.NODE_ENV === 'production') {
   const dbPassword = process.env.DB_PASSWORD;
   url = `mongodb://${dbUsername}:${dbPassword}@localhost:27017`;
 }
-console.log(url);
 mongoose.connect(`${url}/${dbName}`);
 
 const db = mongoose.connection;
