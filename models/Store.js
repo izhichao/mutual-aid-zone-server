@@ -1,4 +1,4 @@
-const mongoose = require('../db');
+const mongoose = require('../utils/db');
 
 const StoreSchema = mongoose.Schema(
   {

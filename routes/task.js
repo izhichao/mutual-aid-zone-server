@@ -1,6 +1,6 @@
 const router = require('koa-router')();
 const TaskController = require('../controller/TaskController');
-const { SuccessModel, ErrorModel } = require('../model/resModel');
+const { SuccessModel, ErrorModel } = require('../utils/resModel');
 router.prefix('/api/task');
 
 router.get('/', async (ctx, next) => {

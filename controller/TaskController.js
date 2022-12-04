@@ -1,5 +1,5 @@
-const Task = require('../db/models/Task');
-const User = require('../db/models/User');
+const Task = require('../models/Task');
+const User = require('../models/User');
 class TaskController {
   static async getTasks(query) {
     const { page, pageSize } = query;

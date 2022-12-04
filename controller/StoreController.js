@@ -1,5 +1,5 @@
-const Store = require('../db/models/Store');
-const User = require('../db/models/User');
+const Store = require('../models/Store');
+const User = require('../models/User');
 
 class StoreController {
   static async getGoods(body) {
