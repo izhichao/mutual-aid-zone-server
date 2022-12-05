@@ -2,22 +2,10 @@ const mongoose = require('../utils/db');
 
 const StoreSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true
-    },
-    price: {
-      type: Number,
-      required: true
-    },
-    stock: {
-      type: Number,
-      required: true
-    },
-    img: {
-      type: String,
-      required: true
-    }
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    stock: { type: Number, required: true },
+    img: { type: String, required: true }
   },
   { timestamps: true }
 );
