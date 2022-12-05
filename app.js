@@ -5,15 +5,16 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const formidable = require('koa2-formidable');
-const logger = require('koa-logger');
+const koaLogger = require('koa-logger');
 const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
-const SECURT_KEY = 'IHS9794Nis';
-
+const log4js = require('./utils/log4js');
+const SECURT_KEY = process.env.SECURT_KEY || 'IHS9794Nis';
+const logger = log4js.getLogger();
 // error handler
 onerror(app);
 
@@ -21,7 +22,7 @@ onerror(app);
 app.use(formidable({ multiples: true, uploadDir: path.join(__dirname, 'public', 'images'), keepExtensions: true }));
 app.use(bodyparser());
 app.use(json());
-app.use(logger());
+app.use(koaLogger());
 app.use(require('koa-static')(__dirname + '/public'));
 app.use(
   cors({
@@ -41,7 +42,7 @@ app.use(async (ctx, next) => {
   const start = new Date();
   await next();
   const ms = new Date() - start;
-  console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
+  logger.debug(`${ctx.method} ${ctx.url} - ${ms}ms`)
 });
 
 // 处理无token或token过期
@@ -91,7 +92,7 @@ app.use(store.routes(), store.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {
-  console.error('server error', err, ctx);
+  logger.error('server error', err, ctx)
 });
 
 module.exports = app;
