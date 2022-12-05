@@ -91,8 +91,8 @@ app.use(task.routes(), task.allowedMethods());
 app.use(store.routes(), store.allowedMethods());
 
 // error-handling
-app.on('error', (err, ctx) => {
-  logger.error('server error', err, ctx)
+app.on('error', (err) => {
+  logger.error('server error', err)
 });
 
 module.exports = app;

@@ -3,31 +3,19 @@ const User = require('../models/User');
 class TaskController {
   static async getTasks(query) {
     const { page, pageSize } = query;
-    const total = (await Task.find().sort({ createdAt: -1 })).length;
+    const total = (await Task.find()).length;
     const tasks = await Task.find()
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
-      .lean();
-
-    for (let i = 0; i < tasks.length; i++) {
-      const { username: setter } = await User.findById(tasks[i].setter);
-      tasks[i].setterName = setter;
-      if (tasks[i].getter) {
-        const { username: getter } = await User.findById(tasks[i].getter);
-        tasks[i].getterName = getter;
-      } else {
-        tasks[i].getterName = '无';
-      }
-    }
-
+      .populate('setter getter', 'username');
     return { total, list: tasks };
   }
 
   static async getPublishTasks(body, query) {
     const { page, pageSize } = query;
     const { userId } = body;
-    const total = (await Task.find({ setter: userId }).sort({ createdAt: -1 })).length;
+    const total = (await Task.find({ setter: userId })).length;
     const tasks = await Task.find({ setter: userId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
@@ -38,7 +26,7 @@ class TaskController {
   static async getAcceptTasks(body, query) {
     const { page, pageSize } = query;
     const { userId } = body;
-    const total = (await Task.find({ getter: userId }).sort({ createdAt: -1 })).length;
+    const total = (await Task.find({ getter: userId })).length;
     const tasks = await Task.find({ getter: userId })
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
@@ -56,16 +44,7 @@ class TaskController {
     const { _id } = query;
     const { url, protocol } = body;
     try {
-      const task = await Task.findById(_id).lean();
-      // 将用户ID转换为用户名
-      const { username: setter } = await User.findById(task.setter);
-      task.setterName = setter;
-      if (task.getter) {
-        const { username: getter } = await User.findById(task.getter);
-        task.getterName = getter;
-      } else {
-        task.getterName = '无';
-      }
+      const task = await Task.findById(_id).populate('setter getter', 'username').lean();
       // 将图片路径替换为绝对路径
       task.imgs = task.imgs.map((item) => {
         if (item.startsWith('/')) {
