@@ -46,6 +46,15 @@ router.post('/password', async (ctx, next) => {
   }
 });
 
+router.post('/forget', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await UserController.forgetPassword(body);
+  if (data === '邮箱不存在，请先注册！') {
+    ctx.body = new ErrorModel(data);
+  } else {
+    ctx.body = new SuccessModel(data);
+  }
+});
 router.post('/edit', async (ctx, next) => {
   const body = ctx.request.body;
   // 获取上传图片名称

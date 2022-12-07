@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const transporter = require('../utils/email');
 const genPassword = require('../utils/cryp');
+const randomPassword = require('../utils/randomPassword');
 class UserController {
   static async login(userData) {
     let { username, password } = userData;
@@ -13,7 +15,7 @@ class UserController {
         {
           userId: user[0]._id
         },
-        'IHS9794Nis',
+        process.env.SECURT_KEY,
         { expiresIn: '12h' }
       );
       user[0].token = token;
@@ -42,7 +44,7 @@ class UserController {
   }
 
   static async getUser(body, query) {
-    const { userId, url,protocol } = body;
+    const { userId, url, protocol } = body;
     const { _id } = query;
     let user = {};
     // 传入_id时，查询该用户的信息；不传入时，查询当前登录用户的信息
@@ -66,6 +68,27 @@ class UserController {
       return '修改成功';
     } else {
       return '原密码错误';
+    }
+  }
+
+  static async forgetPassword(userData) {
+    let { email } = userData;
+    // 随机密码
+    let newPassword = randomPassword(10);
+    // 加密密码
+    let password = genPassword(newPassword);
+    const user = await User.findOneAndUpdate({ email }, { password });
+    if (user) {
+      const message = {
+        subject: '互助圈 您的密码已重置，请使用新密码进行登录！',
+        from: `互助圈 ${process.env.EMAIL_USERNAME}`,
+        to: `${email}`,
+        text: `新密码：${newPassword}`
+      };
+      transporter.sendMail(message);
+      return '新密码已发送至邮箱！';
+    } else {
+      return '邮箱不存在，请先注册！';
     }
   }
 
