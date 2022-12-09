@@ -6,4 +6,3 @@ dist-ssr
 public/images
 .env
 logs
-pnpm-lock.yaml
