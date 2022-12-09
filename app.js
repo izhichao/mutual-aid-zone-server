@@ -1,4 +1,4 @@
-const path = require('path');
+ const path = require('path');
 const Koa = require('koa');
 const app = new Koa();
 const json = require('koa-json');
@@ -13,7 +13,7 @@ const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
 const log4js = require('./utils/log4js');
-const SECURT_KEY = process.env.SECURT_KEY || 'IHS9794Nis';
+const SECURT_KEY = process.env.SECURT_KEY;
 const logger = log4js.getLogger();
 // error handler
 onerror(app);
@@ -42,7 +42,7 @@ app.use(async (ctx, next) => {
   const start = new Date();
   await next();
   const ms = new Date() - start;
-  logger.debug(`${ctx.method} ${ctx.url} - ${ms}ms`)
+  logger.debug(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
 // 处理无token或token过期
@@ -62,7 +62,7 @@ app.use(
   koajwt({
     secret: SECURT_KEY
   }).unless({
-    path: [/\/api\/task$/, /\/api\/task\/search/, /\/api\/user\/register/, /\/api\/user\/login/]
+    path: [/\/api\/task$/, /\/api\/task\/search/, /\/api\/user\/register/, /\/api\/user\/login/, /\/api\/user\/forget/]
   })
 );
 
@@ -70,7 +70,7 @@ app.use(
 app.use((ctx, next) => {
   let token = ctx.header.authorization;
   if (token) {
-    let payload = jwt.decode(token.split(' ')[1], 'IHS9794Nis');
+    let payload = jwt.decode(token.split(' ')[1], SECURT_KEY);
     if (payload) {
       ctx.request.body.userId = payload.userId;
     }
@@ -92,7 +92,7 @@ app.use(store.routes(), store.allowedMethods());
 
 // error-handling
 app.on('error', (err) => {
-  logger.error('server error', err)
+  logger.error('server error', err);
 });
 
 module.exports = app;
