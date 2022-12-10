@@ -41,7 +41,10 @@ class UserController {
   }
 
   static async register(userData) {
-    let { username, phone, email, password } = userData;
+    let { username, phone, email, password, code } = userData;
+    if (code !== codeMap.get(email)) {
+      return '验证码错误！';
+    }
     let role = 0;
     password = genPassword(password);
     const oldUser = await User.find({ username });

@@ -32,10 +32,10 @@ router.post('/code', async (ctx, next) => {
 router.post('/register', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await UserController.register(body);
-  if (data === '用户名已存在') {
-    ctx.body = new ErrorModel(data);
-  } else {
+  if (data === '注册成功') {
     ctx.body = new SuccessModel(data);
+  } else {
+    ctx.body = new ErrorModel(data);
   }
 });
 
