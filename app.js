@@ -1,4 +1,4 @@
- const path = require('path');
+const path = require('path');
 const Koa = require('koa');
 const app = new Koa();
 const json = require('koa-json');
@@ -62,7 +62,14 @@ app.use(
   koajwt({
     secret: SECURT_KEY
   }).unless({
-    path: [/\/api\/task$/, /\/api\/task\/search/, /\/api\/user\/register/, /\/api\/user\/login/, /\/api\/user\/forget/]
+    path: [
+      /\/api\/task$/,
+      /\/api\/task\/search/,
+      /\/api\/user\/register/,
+      /\/api\/user\/login/,
+      /\/api\/user\/forget/,
+      /\/api\/user\/code/
+    ]
   })
 );
 

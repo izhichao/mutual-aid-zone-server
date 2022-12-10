@@ -19,6 +19,16 @@ router.post('/login', async (ctx, next) => {
   }
 });
 
+router.post('/code', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await UserController.getCode(body);
+  if (data === '发送成功') {
+    ctx.body = new SuccessModel(data);
+  } else {
+    ctx.body = new ErrorModel(data);
+  }
+});
+
 router.post('/register', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await UserController.register(body);
