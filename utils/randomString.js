@@ -1,5 +1,5 @@
-function randomPassword(length) {
-  const chars = '0123456789abcdefghijklmnopqrstuvwxtzABCDEFGHIJKLMNOPQRSTUVWXYZ_!';
+function randomString(length) {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxtzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let password = '';
   for (let i = 0; i < length; i++) {
     let index = Math.floor(Math.random() * chars.length);
@@ -8,4 +8,4 @@ function randomPassword(length) {
   return password;
 }
 
-module.exports = randomPassword;
+module.exports = randomString;
