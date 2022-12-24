@@ -9,6 +9,7 @@ const koaLogger = require('koa-logger');
 const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
+const order = require('./routes/order');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
@@ -96,6 +97,7 @@ app.use((ctx, next) => {
 app.use(user.routes(), user.allowedMethods());
 app.use(task.routes(), task.allowedMethods());
 app.use(store.routes(), store.allowedMethods());
+app.use(order.routes(), order.allowedMethods());
 
 // error-handling
 app.on('error', (err) => {
