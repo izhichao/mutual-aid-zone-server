@@ -49,7 +49,7 @@ class StoreController {
     if (!address) {
       return '请在个人信息中填写收货地址';
     }
-    const { price, stock } = await Store.findById(_id);
+    const { name, price, img, stock } = await Store.findById(_id);
     if (stock <= 0) {
       return '库存不足';
     } else if (balance < price) {
@@ -57,7 +57,7 @@ class StoreController {
     } else {
       await User.findOneAndUpdate({ _id: userId }, { balance: balance - price }, { new: true });
       await Store.findOneAndUpdate({ _id }, { stock: stock - 1 }, { new: true });
-      await Order.create({ good: _id, user: userId, address });
+      await Order.create({ good: name, price, img, address, user: userId });
       return '兑换成功';
     }
   }

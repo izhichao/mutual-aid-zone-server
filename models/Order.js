@@ -4,9 +4,12 @@ const Store = require('../models/Store');
 
 const OrderSchema = mongoose.Schema(
   {
-    good: { type: mongoose.Schema.Types.ObjectId, ref: Store, required: true },
+    good: { type: String, required: true },
+    price: { type: String, required: true },
+    img: { type: String, required: true },
+    address: { type: String, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },
-    address: { type: String, required: true }
+    status: { type: Number, default: 0 }
   },
   { timestamps: true }
 );
