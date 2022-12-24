@@ -1,9 +1,10 @@
 const Store = require('../models/Store');
 const User = require('../models/User');
+const Order = require('../models/Order');
 
 class StoreController {
   static async getGoods(body) {
-    const { url,protocol } = body;
+    const { url, protocol } = body;
     const goods = await Store.find();
     goods.forEach((item) => {
       item.img = `${protocol}://${url}${item.img}`;
@@ -35,7 +36,7 @@ class StoreController {
   }
 
   static async getGood(body, query) {
-    const { url,protocol } = body;
+    const { url, protocol } = body;
     const { _id } = query;
     const good = await Store.findById(_id).lean();
     good.img = `${protocol}://${url}${good.img}`;
@@ -44,7 +45,10 @@ class StoreController {
 
   static async exchangeGood(body) {
     const { userId, _id } = body;
-    const { balance } = await this.getBalance(body);
+    const { balance, address } = await User.findById(userId);
+    if (!address) {
+      return '请在个人信息中填写收货地址';
+    }
     const { price, stock } = await Store.findById(_id);
     if (stock <= 0) {
       return '库存不足';
@@ -53,6 +57,7 @@ class StoreController {
     } else {
       await User.findOneAndUpdate({ _id: userId }, { balance: balance - price }, { new: true });
       await Store.findOneAndUpdate({ _id }, { stock: stock - 1 }, { new: true });
+      await Order.create({ good: _id, user: userId, address });
       return '兑换成功';
     }
   }
