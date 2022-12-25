@@ -4,8 +4,8 @@ const { SuccessModel, ErrorModel } = require('../utils/resModel');
 router.prefix('/api/order');
 
 router.get('/', async (ctx, next) => {
-  const { userId } = ctx.request.body;
-  const data = await OrderController.getOrders(userId);
+  const body = ctx.request.body;
+  const data = await OrderController.getOrders(body);
   ctx.body = new SuccessModel(data);
 });
 
