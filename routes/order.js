@@ -9,4 +9,10 @@ router.get('/', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
+router.post('/finish', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await OrderController.finishOrder(body);
+  ctx.body = new SuccessModel(data);
+});
+
 module.exports = router;
