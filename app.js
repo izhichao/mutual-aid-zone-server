@@ -10,6 +10,7 @@ const user = require('./routes/user');
 const task = require('./routes/task');
 const store = require('./routes/store');
 const order = require('./routes/order');
+const ticket = require('./routes/ticket');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
@@ -98,6 +99,7 @@ app.use(user.routes(), user.allowedMethods());
 app.use(task.routes(), task.allowedMethods());
 app.use(store.routes(), store.allowedMethods());
 app.use(order.routes(), order.allowedMethods());
+app.use(ticket.routes(), ticket.allowedMethods());
 
 // error-handling
 app.on('error', (err) => {
