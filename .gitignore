@@ -3,6 +3,9 @@ node_modules
 dist
 dist-ssr
 *.local
-public/images
+public/images/*.jpg
+public/images/*.jpeg
+public/images/*.png
+public/images/*.gif
 .env
 logs

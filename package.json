@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node bin/www",
     "dev": "cross-env NODE_ENV=development ./node_modules/.bin/nodemon bin/www",
+    "pre": "cross-env NODE_ENV=production ./node_modules/.bin/nodemon bin/www",
     "prd": "cross-env NODE_ENV=production pm2 start bin/www --name zone",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
