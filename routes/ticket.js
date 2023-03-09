@@ -15,6 +15,12 @@ router.get('/all', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
+router.get('/detail', async (ctx, next) => {
+  const query = ctx.query;
+  const data = await TicketController.getTicket(query);
+  ctx.body = new SuccessModel(data);
+});
+
 router.post('/question', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await TicketController.createTicket(body);
