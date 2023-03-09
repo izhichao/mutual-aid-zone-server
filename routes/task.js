@@ -32,7 +32,7 @@ router.get('/search', async (ctx, next) => {
 router.get('/detail', async (ctx, next) => {
   const body = ctx.request.body;
   const query = ctx.query;
-  const data = await TaskController.getTaskDetail(body, query);
+  const data = await TaskController.getTask(body, query);
   if (typeof data === 'string') {
     ctx.body = new ErrorModel(data);
   } else {

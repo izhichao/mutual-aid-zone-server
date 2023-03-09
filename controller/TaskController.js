@@ -8,7 +8,12 @@ class TaskController {
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
-      .populate('setter getter', 'username');
+      .populate('setter getter', 'username')
+      .lean();
+    tasks.forEach((item) => {
+      item.setter = item.setter.username;
+      item.getter = item.getter?.username || '无';
+    });
     return { total, list: tasks };
   }
 
@@ -40,7 +45,7 @@ class TaskController {
     return tasks;
   }
 
-  static async getTaskDetail(body, query) {
+  static async getTask(body, query) {
     const { _id } = query;
     const { url, protocol } = body;
     try {
