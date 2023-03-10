@@ -1,13 +1,24 @@
 const Order = require('../models/Order');
 
 class OrderController {
-  static async getOrders(body) {
+  static async getOrders(body, query) {
     const { userId, url, protocol } = body;
-    const orders = await Order.find({ user: userId }).sort({ createdAt: -1 }).lean();
+    const { type } = query;
+    let selectObj = { user: userId };
+    if (type === 'all') {
+      selectObj = {};
+    }
+    const orders = await Order.find(selectObj).sort({ createdAt: -1 }).populate('user', 'username').lean();
     orders.forEach((item) => {
       item.img = `${protocol}://${url}${item.img}`;
+      item.user = item.user.username;
     });
     return orders;
+  }
+
+  static async editOrder(body) {
+    const { _id, address, express } = body;
+
   }
 
   static async finishOrder(body) {

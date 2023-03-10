@@ -4,8 +4,9 @@ const { SuccessModel, ErrorModel } = require('../utils/resModel');
 router.prefix('/api/order');
 
 router.get('/', async (ctx, next) => {
+  const query = ctx.query;
   const body = ctx.request.body;
-  const data = await OrderController.getOrders(body);
+  const data = await OrderController.getOrders(body, query);
   ctx.body = new SuccessModel(data);
 });
 
@@ -16,3 +17,4 @@ router.post('/finish', async (ctx, next) => {
 });
 
 module.exports = router;
+ 
