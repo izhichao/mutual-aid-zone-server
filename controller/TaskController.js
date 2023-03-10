@@ -1,10 +1,20 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
 class TaskController {
-  static async getTasks(query) {
-    const { page, pageSize } = query;
-    const total = (await Task.find()).length;
-    const tasks = await Task.find()
+  static async getTasks(body, query) {
+    const { page, pageSize, type } = query;
+    const { userId } = body;
+    // 判断列表类型
+    let selectObj = {};
+    if (type === 'publish') {
+      selectObj = { setter: userId };
+    } else if (type === 'accept') {
+      selectObj = { getter: userId };
+    }
+
+    // 获取数据
+    const total = (await Task.find(selectObj)).length;
+    const tasks = await Task.find(selectObj)
       .sort({ createdAt: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
@@ -14,28 +24,6 @@ class TaskController {
       item.setter = item.setter.username;
       item.getter = item.getter?.username || '无';
     });
-    return { total, list: tasks };
-  }
-
-  static async getPublishTasks(body, query) {
-    const { page, pageSize } = query;
-    const { userId } = body;
-    const total = (await Task.find({ setter: userId })).length;
-    const tasks = await Task.find({ setter: userId })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-    return { total, list: tasks };
-  }
-
-  static async getAcceptTasks(body, query) {
-    const { page, pageSize } = query;
-    const { userId } = body;
-    const total = (await Task.find({ getter: userId })).length;
-    const tasks = await Task.find({ getter: userId })
-      .sort({ createdAt: -1 })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
     return { total, list: tasks };
   }
 
