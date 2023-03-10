@@ -1,17 +1,20 @@
 const Ticket = require('../models/Ticket');
 
 class TicketController {
-  static async getTickets(body) {
+  static async getTickets(body, query) {
     const { userId } = body;
-    const tickets = await Ticket.find({ user: userId }).sort({ createdAt: -1 });
-    return tickets;
-  }
-
-  static async getAllTickets() {
-    const tickets = await Ticket.find().sort({ createdAt: -1 }).populate('user admin', 'username').lean();
+    const { type } = query;
+    let selectObj = { user: userId };
+    if (type === 'all') {
+      selectObj = {};
+    }
+    const tickets = await Ticket.find(selectObj)
+      .sort({ createdAt: -1 })
+      .populate('user admin', 'username')
+      .lean();
     tickets.forEach((item) => {
       item.user = item.user.username;
-      item.admin = item.admin.username;
+      item.admin = item.admin?.username;
       return item;
     });
     return tickets;
@@ -21,7 +24,7 @@ class TicketController {
     const { _id } = query;
     const ticket = await Ticket.findById(_id).populate('user admin', 'username').lean();
     ticket.user = ticket.user.username;
-    ticket.admin = ticket.admin.username;
+    ticket.admin = ticket.admin?.username;
     return ticket;
   }
 

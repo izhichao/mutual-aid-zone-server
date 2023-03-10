@@ -6,12 +6,8 @@ router.prefix('/api/ticket');
 
 router.get('/', async (ctx, next) => {
   const body = ctx.request.body;
-  const data = await TicketController.getTickets(body);
-  ctx.body = new SuccessModel(data);
-});
-
-router.get('/all', async (ctx, next) => {
-  const data = await TicketController.getAllTickets();
+  const query = ctx.query;
+  const data = await TicketController.getTickets(body, query);
   ctx.body = new SuccessModel(data);
 });
 
