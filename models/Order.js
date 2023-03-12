@@ -4,7 +4,7 @@ const User = require('../models/User');
 const OrderSchema = mongoose.Schema(
   {
     good: { type: String, required: true },
-    price: { type: String, required: true },
+    price: { type: Number, required: true },
     img: { type: String, required: true },
     address: { type: String, required: true },
     express: { type: String },
