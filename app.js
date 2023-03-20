@@ -11,6 +11,7 @@ const task = require('./routes/task');
 const store = require('./routes/store');
 const order = require('./routes/order');
 const ticket = require('./routes/ticket');
+const chat = require('./routes/chat');
 const cors = require('koa2-cors');
 const koajwt = require('koa-jwt');
 const jwt = require('jsonwebtoken');
@@ -100,6 +101,7 @@ app.use(task.routes(), task.allowedMethods());
 app.use(store.routes(), store.allowedMethods());
 app.use(order.routes(), order.allowedMethods());
 app.use(ticket.routes(), ticket.allowedMethods());
+app.use(chat.routes(), chat.allowedMethods());
 
 // error-handling
 app.on('error', (err) => {
