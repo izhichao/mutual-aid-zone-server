@@ -13,7 +13,9 @@ class ChatController {
   static async getPastChats(body) {}
 
   static async deleteChat(body) {
-
+    const { _id } = body;
+    await Chat.findByIdAndUpdate(_id, { delete: true });
+    return '删除成功';
   }
 
   static async createChat(message) {
