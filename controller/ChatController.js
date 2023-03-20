@@ -42,7 +42,18 @@ class ChatController {
   }
 
   // 用户聊天记录
-  static async getPastChats(body) {}
+  static async getPastChats(body, query) {
+    const { userId } = body;
+    const { _id } = query;
+    const filter = {
+      $or: [
+        { sender: userId, receiver: _id, delete: false },
+        { sender: _id, receiver: userId, delete: false }
+      ]
+    };
+    const chats = await Chat.find(filter);
+    return chats;
+  }
 
   static async deleteChat(body) {
     const { _id } = body;
