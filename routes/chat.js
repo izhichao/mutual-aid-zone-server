@@ -8,6 +8,12 @@ router.get('/', async (ctx, next) => {
   ctx.body = new SuccessModel(data);
 });
 
+router.get('/user', async (ctx, next) => {
+  const body = ctx.request.body;
+  const data = await ChatController.getUserChats(body);
+  ctx.body = new SuccessModel(data);
+});
+
 router.post('/delete', async (ctx, next) => {
   const body = ctx.request.body;
   const data = await ChatController.deleteChat(body);
