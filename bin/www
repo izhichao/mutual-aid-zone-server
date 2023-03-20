@@ -21,7 +21,7 @@ var port = normalizePort(process.env.PORT || '8000');
 
 var server = http.createServer(app.callback());
 const io = require('socket.io')(server, { cors: true });
-
+const ChatController = require('../controller/ChatController');
 const onlineMap = new Map();
 io.on('connection', (socket) => {
   // 1.用户上线，记录用户ID及Socket ID
@@ -36,8 +36,8 @@ io.on('connection', (socket) => {
     }
 
     // TODO：存入数据库
+    ChatController.createChat(message);
   });
-
 
   // 3.用户下线
   socket.on('disconnect', () => {
