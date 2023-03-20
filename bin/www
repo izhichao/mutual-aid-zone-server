@@ -20,6 +20,35 @@ var port = normalizePort(process.env.PORT || '8000');
  */
 
 var server = http.createServer(app.callback());
+const io = require('socket.io')(server, { cors: true });
+
+const onlineMap = new Map();
+io.on('connection', (socket) => {
+  // 1.用户上线，记录用户ID及Socket ID
+  const sender = socket.handshake.query.sender;
+  onlineMap.set(sender, socket.id);
+
+  // 2.收到前端发送的消息
+  socket.on('chat', (message) => {
+    // 如果用户在线，实时接受消息
+    if (onlineMap.has(message.receiver)) {
+      socket.to(onlineMap.get(message.receiver)).emit('chat', message);
+    }
+
+    // TODO：存入数据库
+  });
+
+
+  // 3.用户下线
+  socket.on('disconnect', () => {
+    // 下线时，移除Socket ID
+    onlineMap.forEach((value, key) => {
+      if (socket.id === value) {
+        onlineMap.delete(key);
+      }
+    });
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -58,9 +87,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -83,8 +110,6 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
