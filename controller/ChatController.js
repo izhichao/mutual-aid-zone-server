@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 class ChatController {
   static async getChats() {
-    const chats = await Chat.find();
+    const chats = await Chat.find().populate('sender receiver', 'username');
     return chats;
   }
 
