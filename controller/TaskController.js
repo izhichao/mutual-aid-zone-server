@@ -78,7 +78,9 @@ class TaskController {
     const { _id } = taskData;
     const task = await Task.findByIdAndDelete(_id);
     const setter = await User.findById(task.setter);
-    await User.findByIdAndUpdate(task.setter, { balance: setter.balance + task.price });
+    if (task.status !== 2) {
+      await User.findByIdAndUpdate(task.setter, { balance: setter.balance + task.price });
+    }
     return '删除成功';
   }
 
@@ -118,7 +120,7 @@ class TaskController {
     if (status != null && status !== oldTask.status) {
       if (oldTask.status === 0) {
         // 未接受 -> 已接受/已完成
-        return '任务暂无接收者，无法修改状态！';
+        return '任务暂无接受者，无法修改状态！';
       } else if (oldTask.status === 1) {
         if (status === 0) {
           // 已接受 -> 未接受
@@ -138,7 +140,7 @@ class TaskController {
         newTask.status = status;
         const getter = await User.findById(oldTask.getter);
         if (getter.balance < parseInt(oldTask.price)) {
-          return `接收者余额不足${oldTask.price}元，无法修改任务状态`;
+          return `接受者余额不足${oldTask.price}元，无法修改任务状态`;
         }
         await User.findByIdAndUpdate(oldTask.getter, { balance: getter.balance - oldTask.price });
       }

@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
       socket.to(onlineMap.get(message.receiver)).emit('chat', message);
     }
 
-    // TODO：存入数据库
+    // 存入数据库
     ChatController.createChat(message);
   });
 
