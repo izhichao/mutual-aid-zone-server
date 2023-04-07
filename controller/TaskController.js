@@ -115,7 +115,7 @@ class TaskController {
     }
 
     // 修改状态
-    if (status && status !== oldTask.status) {
+    if (status != null && status !== oldTask.status) {
       if (oldTask.status === 0) {
         // 未接受 -> 已接受/已完成
         return '任务暂无接收者，无法修改状态！';
@@ -143,7 +143,6 @@ class TaskController {
         await User.findByIdAndUpdate(oldTask.getter, { balance: getter.balance - oldTask.price });
       }
     }
-
     const task = await Task.findByIdAndUpdate(_id, newTask, { new: true });
     return task;
   }
