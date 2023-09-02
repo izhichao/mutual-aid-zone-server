@@ -1,3 +1,5 @@
+// 获取 env
+require('dotenv').config();
 const path = require('path');
 const Koa = require('koa');
 const app = new Koa();
