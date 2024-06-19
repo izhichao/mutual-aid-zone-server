@@ -11,6 +11,7 @@ if (dbUsername && dbPassword) {
   url = `mongodb://${dbUsername}:${dbPassword}@${dbIp}:${dbPort}`;
 }
 
+mongoose.set('strictQuery', true);
 mongoose.connect(`${url}/${dbName}?authSource=${dbAuthSource}`);
 
 const db = mongoose.connection;
