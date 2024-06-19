@@ -68,12 +68,12 @@ app.use(
     secret: SECURT_KEY
   }).unless({
     path: [
-      /\/api\/task$/,
-      /\/api\/task\/search/,
-      /\/api\/user\/register/,
-      /\/api\/user\/login/,
-      /\/api\/user\/forget/,
-      /\/api\/user\/code/
+      /\/task$/,
+      /\/task\/search/,
+      /\/user\/register/,
+      /\/user\/login/,
+      /\/user\/forget/,
+      /\/user\/code/
     ]
   })
 );

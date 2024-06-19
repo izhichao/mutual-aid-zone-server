@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const { SuccessModel, ErrorModel } = require('../utils/resModel');
 const TicketController = require('../controller/TicketController');
 
-router.prefix('/api/ticket');
+router.prefix('/ticket');
 
 router.get('/', async (ctx, next) => {
   const body = ctx.request.body;

@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const { SuccessModel, ErrorModel } = require('../utils/resModel');
 const UserController = require('../controller/UserController');
 
-router.prefix('/api/user');
+router.prefix('/user');
 
 router.get('/', async (ctx, next) => {
   const data = await UserController.getUsers();

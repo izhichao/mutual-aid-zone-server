@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const { SuccessModel } = require('../utils/resModel');
 const StoreController = require('../controller/StoreController');
 
-router.prefix('/api/store');
+router.prefix('/store');
 
 router.get('/', async (ctx, next) => {
   const body = ctx.request.body;
